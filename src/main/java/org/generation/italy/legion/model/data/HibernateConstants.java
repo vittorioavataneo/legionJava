@@ -57,7 +57,17 @@ public static final String HQL_FIND_TEACHERS_BY_COURSE_EDITION = """
                    group by m.teacher
                    having count (*) = :n)
        """;
+
+    public static final String HQL_FIND_COURSE_BY_TITLE_ACTIVE_MIN_EDITION = """
+        from Course c
+        inner join  CourseEdition ce on c.id=ce.course.id
+        where (c.title like :p) and (c.active = :a)
+        group by c.id
+        having count(ce.course.id) >= :n
+        """;
+
 }
+
 
 
 

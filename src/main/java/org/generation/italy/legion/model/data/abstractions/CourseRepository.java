@@ -11,6 +11,10 @@ public interface CourseRepository extends AbstractCrudRepository<Course>{
     void deactivateOldest(int n) throws DataException;
     boolean adjustActiveCourses(int NumActive) throws DataException;
 
+    Iterable<Course> findByTitleActiveAndMinEditions(String part, boolean active, int minEditions);
+    Iterable<Course> findByTitleAndActive(String part, boolean active);
+
+
 }
 
 /*

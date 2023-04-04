@@ -50,6 +50,16 @@ public class StandardCourseDidacticService implements AbstractCrudDidacticServic
     }
 
     @Override
+    public Iterable<Course> findCoursesByTitleActiveAndMinEditions(String part, boolean active, int minEditions) {
+        return repo.findByTitleActiveAndMinEditions(part, active, minEditions);
+    }
+
+    @Override
+    public Iterable<Course> findCoursesByTitleAndActive(String part, boolean active) {
+        return repo.findByTitleAndActive(part, active);
+    }
+
+    @Override
     public List<Course> findAll() throws DataException {
         return repo.findAll();
     }

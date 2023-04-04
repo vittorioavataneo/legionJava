@@ -160,6 +160,16 @@ public class CSVFileCourseRepository implements CourseRepository {
         return false;
     }
 
+    @Override
+    public Iterable<Course> findByTitleActiveAndMinEditions(String part, boolean active, int minEditions) {
+        return null;
+    }
+
+    @Override
+    public Iterable<Course> findByTitleAndActive(String part, boolean active) {
+        return null;
+    }
+
     public String courseToCSV(Course c){                //trasforma i dati presenti dell'oggetto in una stringa(che poi scriveremo sul file)
         return String.format(Locale.US,CSV_COURSE,c.getId(),c.getTitle()
                 ,c.getDescription(),c.getProgram(),c.getDuration(),c.isActive(),c.getCreatedAt());

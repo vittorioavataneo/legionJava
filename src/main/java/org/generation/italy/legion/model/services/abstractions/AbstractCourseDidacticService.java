@@ -11,4 +11,6 @@ public interface AbstractCourseDidacticService extends AbstractCrudDidacticServi
 
     boolean adjustActiveCourses(int numActive) throws DataException; //se corsi attivi > numActive disattiva i più vecchi
 
+    Iterable<Course> findCoursesByTitleActiveAndMinEditions(String part, boolean active, int minEditions);
+    Iterable<Course> findCoursesByTitleAndActive(String part, boolean active);
 }
