@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Set;
 @Entity
 @PrimaryKeyJoinColumn(name = "id_teacher")
@@ -34,6 +35,7 @@ public class Teacher extends Person implements WithId{
         this.level = level;
     }
 
+
     public String getpIVA() {
         return pIVA;
     }
@@ -53,4 +55,5 @@ public class Teacher extends Person implements WithId{
     public Level getLevel() {
         return level;
     }
+
 }
