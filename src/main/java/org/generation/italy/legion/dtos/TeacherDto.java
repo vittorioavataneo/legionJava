@@ -23,7 +23,7 @@ public class TeacherDto extends PersonDto{
 
     public static TeacherDto fromEntity(Teacher t){
         return new TeacherDto(t.getId(), t.getFirstname(), t.getLastname(), t.getDob().toString(), t.getSex(), t.getEmail(),
-                t.getCellNumber(), t.getUsername(), t.getPassword(), t.getpIVA(), t.isEmployee(), t.getHireDate().toString(),
+                t.getCellNumber(), t.getUsername(), t.getPassword(), t.getpIVA(), t.isEmployee(), t.getHireDate() != null ? t.getHireDate().toString() : "",
                 t.getFireDate() != null ? t.getFireDate().toString() : "", t.getLevel());
     }
 
