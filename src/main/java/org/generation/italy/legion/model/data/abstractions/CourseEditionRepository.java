@@ -1,11 +1,12 @@
 package org.generation.italy.legion.model.data.abstractions;
 
 import org.generation.italy.legion.model.entities.CourseEdition;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
-public interface CourseEditionRepository {
+public interface CourseEditionRepository extends JpaRepository<CourseEdition, Long> {
     double getTotalCost();
     Optional<CourseEdition> findMostExpensive();
     double findAverageCost();
