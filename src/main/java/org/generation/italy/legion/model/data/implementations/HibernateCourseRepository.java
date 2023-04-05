@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import org.generation.italy.legion.model.data.abstractions.CourseRepository;
 import org.generation.italy.legion.model.data.exceptions.DataException;
 import org.generation.italy.legion.model.entities.Course;
-import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -12,8 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static org.generation.italy.legion.model.data.HibernateConstants.HQL_FIND_COURSE_BY_TITLE_ACTIVE_MIN_EDITION;
-import static org.generation.italy.legion.model.data.HibernateConstants.HQL_OLDEST_N_COURSES;
+import static org.generation.italy.legion.model.data.HibernateConstants.*;
 
 @Repository
 @Profile("hibernate")
@@ -95,7 +93,7 @@ public class HibernateCourseRepository extends GenericCrudRepository<Course> imp
 
     @Override
     public Iterable<Course> findByTitleAndActive(String part, boolean active) {
-        Query<Course> q = session.createQuery("from Course where (title like :p) and (active = :a)", Course.class);
+        Query<Course> q = session.createQuery(HQL_FIND_COURSE_BY_TITLE_ACTIVE, Course.class);
         q.setParameter("p", "%" + part + "%");
         q.setParameter("a", active);
         return q.list();
@@ -103,7 +101,7 @@ public class HibernateCourseRepository extends GenericCrudRepository<Course> imp
 
     @Override
     public List<Course> findByTitleContains(String part) throws DataException {
-        Query<Course> q = session.createQuery("from Course where title like :p", Course.class);
+        Query<Course> q = session.createQuery(HQL_FIND_COURSE_BY_TITLE_LIKE, Course.class);
         q.setParameter("p", "%" + part + "%");
         return q.list();
     }
