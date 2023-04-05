@@ -95,7 +95,7 @@ public class HibernateCourseRepository extends GenericCrudRepository<Course> imp
 
     @Override
     public Iterable<Course> findByTitleAndActive(String part, boolean active) {
-        Query<Course> q = session.createQuery("from Course where (title like :p) and (active like :a)", Course.class);
+        Query<Course> q = session.createQuery("from Course where (title like :p) and (active = :a)", Course.class);
         q.setParameter("p", "%" + part + "%");
         q.setParameter("a", active);
         return q.list();

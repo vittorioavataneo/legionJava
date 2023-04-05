@@ -32,6 +32,12 @@ public class CourseDto {
                 c.getCreatedAt() != null ? c.getCreatedAt().toString() : "");
     }
 
+    public static Iterable<CourseDto> fromEntityIterable(Iterable<Course> ic){
+        return StreamSupport.stream(ic.spliterator(), false)
+                .map(CourseDto::fromEntity)
+                .toList();
+    }
+
     public long getId() {
         return id;
     }
@@ -86,11 +92,5 @@ public class CourseDto {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public static Iterable<CourseDto> fromEntityIterable(Iterable<Course> ic){
-        return StreamSupport.stream(ic.spliterator(), false)
-                .map(CourseDto::fromEntity)
-                .toList();
     }
 }

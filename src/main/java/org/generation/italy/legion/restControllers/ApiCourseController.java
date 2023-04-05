@@ -35,7 +35,7 @@ public class ApiCourseController {
     }
 
     @GetMapping()
-    public ResponseEntity<Iterable<CourseDto>> findCoursesByTitleContainsActiveAndMinEdition(@RequestParam(required = true) String part,
+    public ResponseEntity<Iterable<CourseDto>> findCoursesByTitleContainsActiveAndMinEdition(@RequestParam() String part,
                                                                           @RequestParam(required = false) Boolean active,
                                                                           @RequestParam(required = false) Integer minEdition){
         try {
@@ -45,17 +45,17 @@ public class ApiCourseController {
             }else if(minEdition == null){
                 Iterable<Course> courseIterable = service.findCoursesByTitleAndActive(part, active);
                 return ResponseEntity.ok().body(CourseDto.fromEntityIterable(courseIterable));
-            }else {
+            }else if(part!=null){
                 Iterable<Course> courseIterable = service.findCoursesByTitleActiveAndMinEditions(part, active, minEdition);
                 return ResponseEntity.ok().body(CourseDto.fromEntityIterable(courseIterable));
+            }else {
+                return ResponseEntity.badRequest().build();
             }
         } catch (DataException e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
-
-
 
 
 }
