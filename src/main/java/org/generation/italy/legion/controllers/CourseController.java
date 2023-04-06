@@ -1,10 +1,11 @@
 package org.generation.italy.legion.controllers;
 
 import jakarta.validation.Valid;
+import org.generation.italy.legion.model.data.abstractions.GenericRepository;
 import org.generation.italy.legion.model.data.exceptions.DataException;
 import org.generation.italy.legion.model.entities.Course;
-import org.generation.italy.legion.model.services.abstractions.AbstractCrudService;
 import org.generation.italy.legion.model.services.abstractions.AbstractDidacticService;
+import org.generation.italy.legion.model.services.implementations.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,16 +15,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+
 public class CourseController {
     private AbstractDidacticService didacticService;
-    private AbstractCrudService<Course> courseService;
+    private GenericService<Course> crudService;
 
     @Autowired
-    public CourseController(AbstractDidacticService didacticService, AbstractCrudService<Course> courseService){
-
+    public CourseController(AbstractDidacticService didacticService,
+                                GenericRepository<Course> courseRepo){
         this.didacticService = didacticService;
-        this.courseService = courseService;
+        this.crudService = new GenericService<>(courseRepo);
     }
 
     @GetMapping("/home")
@@ -42,23 +43,23 @@ public class CourseController {
     }
 
     @GetMapping("/index")
-    public String showCourses(Model m){  // Model è un oggetto che trasferisce dati tra il Controller e la View
-        Iterable<Course> courseList = courseService.findAll();
-        m.addAttribute("courses", courseList);
-        return "courses";
+    public String showCourses(Model m) {  // Model è un oggetto che trasferisce dati tra il Controller e la View
+        Iterable<Course> courseList = null;
+        try {
+            courseList = crudService.findAll();
+            m.addAttribute("courses", courseList);
+            return "courses";
+        } catch (DataException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     @GetMapping("/findCourseById")
     public String findById(Model m, long courseId){
-        try {
-            Optional<Course> c = courseService.findById(courseId);
-            Course found = c.orElse(new Course());
-            m.addAttribute("course", found);
-            return "course_detail";
-        } catch (DataException e) {
-            e.printStackTrace();
-            m.addAttribute("error", e.getCause().getMessage());
-            return "error";
-        }
+        Optional<Course> c = crudService.findById(courseId);
+        Course found = c.orElse(new Course());
+        m.addAttribute("course", found);
+        return "course_detail";
     }
 
     @GetMapping("/saveCourse")
@@ -67,7 +68,7 @@ public class CourseController {
             return "insert_course";
         }
         try {
-            courseService.create(c);
+            crudService.create(c);
             return "home";
         } catch (DataException e) {
             e.printStackTrace();

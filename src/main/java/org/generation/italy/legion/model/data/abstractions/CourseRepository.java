@@ -2,24 +2,28 @@ package org.generation.italy.legion.model.data.abstractions;
 
 import org.generation.italy.legion.model.data.exceptions.DataException;
 import org.generation.italy.legion.model.entities.Course;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface CourseRepository extends AbstractCrudRepository<Course> {
+import static org.generation.italy.legion.model.data.HibernateConstants.HQL_FIND_COURSE_ACTIVE_BY_TITLE_LIKE_AND_MIN_EDITION;
+import static org.generation.italy.legion.model.data.HibernateConstants.HQL_FIND_COURSE_BY_TITLE_ACTIVE_MIN_EDITION;
+
+public interface CourseRepository extends GenericRepository<Course> {
     List<Course> findByTitleContains(String part) throws DataException;
-    /*@Query("""
+    @Query("""
             select count(c)
             from Course c
             where c.active = true
-            """)*/
+            """)
     int countActiveCourses() throws DataException;
+    @Query("from Course c")
     void deactivateOldest(int n) throws DataException;
+    @Query("from Course c")
     boolean adjustActiveCourses(int NumActive) throws DataException;
-    Iterable<Course> findByTitleActiveAndMinEditions(String part, boolean active, int minEditions);
-    Iterable<Course> findByTitleAndActive(String part, boolean active);
+    @Query(HQL_FIND_COURSE_ACTIVE_BY_TITLE_LIKE_AND_MIN_EDITION)
+    Iterable<Course> findByTitleAndIsActiveAndMinEdition(String part, boolean active, int minEditions);
+    Iterable<Course> findByTitleContainingAndActiveTrue(String part);
 
 }
 

@@ -2,11 +2,12 @@ package org.generation.italy.legion.restControllers;
 
 import org.generation.italy.legion.dtos.SimpleTeacherDto;
 import org.generation.italy.legion.dtos.TeacherDto;
+import org.generation.italy.legion.model.data.abstractions.GenericRepository;
 import org.generation.italy.legion.model.data.exceptions.DataException;
 import org.generation.italy.legion.model.entities.Level;
 import org.generation.italy.legion.model.entities.Teacher;
-import org.generation.italy.legion.model.services.abstractions.AbstractCrudService;
 import org.generation.italy.legion.model.services.abstractions.AbstractDidacticService;
+import org.generation.italy.legion.model.services.implementations.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,27 +18,23 @@ import java.util.Optional;
 @RequestMapping(value = "api/teachers") //davanti al prefisso dei metodi avremo "api"
 public class ApiTeacherController {
     private AbstractDidacticService didacticService;
-    private AbstractCrudService<Teacher> teacherService;
+    private GenericService<Teacher> crudService;
 
     @Autowired
-    public ApiTeacherController(AbstractDidacticService didacticService, AbstractCrudService<Teacher> teacherService){
-
+    public ApiTeacherController(AbstractDidacticService didacticService,
+                                GenericRepository<Teacher> teacherRepo){
         this.didacticService = didacticService;
-        this.teacherService = teacherService;
+        this.crudService = new GenericService<>(teacherRepo);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TeacherDto> findById(@PathVariable long id){
-        try {
-            Optional<Teacher> teacherOp = teacherService.findById(id);
-            if(teacherOp.isPresent()){
-                return ResponseEntity.ok().body(TeacherDto.fromEntity(teacherOp.get()));
-            }
-            return ResponseEntity.notFound().build();
-        } catch (DataException e){
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+        Optional<Teacher> teacherOp = crudService.findById(id);
+        if(teacherOp.isPresent()){
+            return ResponseEntity.ok().body(TeacherDto.fromEntity(teacherOp.get()));
         }
+        return ResponseEntity.notFound().build();
+
     }
 
     @GetMapping()

@@ -15,8 +15,8 @@ public interface AbstractDidacticService {
 //COURSE
     List<Course> findCoursesByTitleContains(String part) throws DataException;
     boolean adjustActiveCourses(int numActive) throws DataException; //se corsi attivi > numActive disattiva i più vecchi
-    Iterable<Course> findCoursesByTitleActiveAndMinEditions(String part, boolean active, int minEditions);
-    Iterable<Course> findCoursesByTitleAndActive(String part, boolean active);
+    Iterable<Course> findByTitleAndIsActiveAndMinEdition(String part, boolean active, int minEditions);
+    Iterable<Course> findByTitleAndIsActive(String part, boolean active);
 
 
 //COURSE EDITION
@@ -31,6 +31,8 @@ public interface AbstractDidacticService {
     Iterable<CourseEdition> findCourseEditionMedianByCost();
 
     Optional<Double> findCourseEditionCostMode();
+
+
 //TEACHER
     Iterable<Teacher> findWithCompetenceByLevel(Level teacherLevel) throws DataException;
     Iterable<Teacher> findWithSkillAndLevel(long idSkill, Level competenceLevel) throws DataException;
