@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-import static org.generation.italy.legion.model.data.HibernateConstants.HQL_FIND_COURSE_ACTIVE_BY_TITLE_LIKE_AND_MIN_EDITION;
 import static org.generation.italy.legion.model.data.HibernateConstants.HQL_FIND_COURSE_BY_TITLE_ACTIVE_MIN_EDITION;
 
 public interface CourseRepository extends GenericRepository<Course> {
@@ -21,7 +20,7 @@ public interface CourseRepository extends GenericRepository<Course> {
     void deactivateOldest(int n) throws DataException;
     @Query("from Course c")
     boolean adjustActiveCourses(int NumActive) throws DataException;
-    @Query(HQL_FIND_COURSE_ACTIVE_BY_TITLE_LIKE_AND_MIN_EDITION)
+    @Query(HQL_FIND_COURSE_BY_TITLE_ACTIVE_MIN_EDITION)
     Iterable<Course> findByTitleAndIsActiveAndMinEdition(String part, boolean active, int minEditions);
     Iterable<Course> findByTitleContainingAndActiveTrue(String part);
 
