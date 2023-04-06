@@ -10,27 +10,29 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface AbstractDidacticService{
+public interface AbstractDidacticService {
 
+//COURSE
     List<Course> findCoursesByTitleContains(String part) throws DataException;
-
     boolean adjustActiveCourses(int numActive) throws DataException; //se corsi attivi > numActive disattiva i più vecchi
-
     Iterable<Course> findCoursesByTitleActiveAndMinEditions(String part, boolean active, int minEditions);
     Iterable<Course> findCoursesByTitleAndActive(String part, boolean active);
-    Iterable<Teacher> findWithCompetenceByLevel(Level teacherLevel) throws DataException;
-    Iterable<Teacher> findWithSkillAndLevel(long idSkill, Level competenceLevel) throws DataException;
+
+
+//COURSE EDITION
     double findCourseEditionTotalCost();
     Optional<CourseEdition> findMostExpensiveCourseEdition();
     double findCourseEditionAverageCost();
     double findCourseEditionAllDurations();
-
     Iterable<CourseEdition> findCourseEditionsByCourse(long courseId);
-
     Iterable<CourseEdition> findCourseEditionsByCourseTitleAndPeriod(String titlePart,
                                                                      LocalDate startAt, LocalDate endAt);
     Iterable<CourseEdition> findAllCourseEdition();
     Iterable<CourseEdition> findCourseEditionMedianByCost();
 
     Optional<Double> findCourseEditionCostMode();
+//TEACHER
+    Iterable<Teacher> findWithCompetenceByLevel(Level teacherLevel) throws DataException;
+    Iterable<Teacher> findWithSkillAndLevel(long idSkill, Level competenceLevel) throws DataException;
+
 }
