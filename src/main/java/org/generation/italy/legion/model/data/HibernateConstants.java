@@ -81,6 +81,21 @@ public static final String HQL_FIND_TEACHERS_BY_COURSE_EDITION = """
         where (title like :p) and (active = :a)
         """;
 
+    public static final String HQL_FIND_MODE_COURSE_EDITION_COST = """
+            select ce.cost
+            from CourseEdition ce
+            group by ce.cost
+            order by count(ce.id) desc
+            """;
+    public static final String HQL_COUNT_COURSE_EDITION = """
+            select count(ce.id)
+            from CourseEdition ce
+            """;
+    public static final String HQL_GET_ALL_COURSE_EDITION= """
+            select ce
+            from CourseEdition ce
+            order by (ce.cost)
+            """;
 }
 
 

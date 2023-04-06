@@ -3,7 +3,8 @@ package org.generation.italy.legion.restControllers;
 import org.generation.italy.legion.dtos.CourseDto;
 import org.generation.italy.legion.model.data.exceptions.DataException;
 import org.generation.italy.legion.model.entities.Course;
-import org.generation.italy.legion.model.services.abstractions.AbstractCourseDidacticService;
+import org.generation.italy.legion.model.services.abstractions.AbstractCrudService;
+import org.generation.italy.legion.model.services.abstractions.AbstractDidacticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,17 +14,20 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "api/courses")
 public class ApiCourseController {
-    private AbstractCourseDidacticService service;
+    private AbstractDidacticService didacticService;
+    private AbstractCrudService<Course> courseService;
 
     @Autowired
-    public ApiCourseController(AbstractCourseDidacticService service){
-        this.service = service;
+    public ApiCourseController(AbstractDidacticService didacticService, AbstractCrudService<Course> courseService){
+
+        this.didacticService = didacticService;
+        this.courseService = courseService;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseDto> findById(@PathVariable long id){
         try {
-            Optional<Course> c = service.findById(id);
+            Optional<Course> c = courseService.findById(id);
             if(c.isPresent()){
                 return ResponseEntity.ok().body(CourseDto.fromEntity(c.get()));
             }
@@ -40,13 +44,13 @@ public class ApiCourseController {
                                                                           @RequestParam(required = false) Integer minEdition){
         try {
             if(active == null && minEdition == null) {
-                Iterable<Course> courseIterable = service.findCoursesByTitleContains(part);
+                Iterable<Course> courseIterable = didacticService.findCoursesByTitleContains(part);
                 return ResponseEntity.ok().body(CourseDto.fromEntityIterable(courseIterable));
             }else if(minEdition == null){
-                Iterable<Course> courseIterable = service.findCoursesByTitleAndActive(part, active);
+                Iterable<Course> courseIterable = didacticService.findCoursesByTitleAndActive(part, active);
                 return ResponseEntity.ok().body(CourseDto.fromEntityIterable(courseIterable));
             }else if(part!=null){
-                Iterable<Course> courseIterable = service.findCoursesByTitleActiveAndMinEditions(part, active, minEdition);
+                Iterable<Course> courseIterable = didacticService.findCoursesByTitleActiveAndMinEditions(part, active, minEdition);
                 return ResponseEntity.ok().body(CourseDto.fromEntityIterable(courseIterable));
             }else {
                 return ResponseEntity.badRequest().build();

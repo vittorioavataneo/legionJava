@@ -24,7 +24,7 @@ public class GenericCrudRepository<T> implements AbstractCrudRepository<T> {
    }
 
    @Override
-   public List<T> findAll() throws DataException {
+   public List<T> findAll() {
       Query<T> q = (Query<T>) session.createQuery("from " + entityClass.getSimpleName(), entityClass);
       return q.list();
    }

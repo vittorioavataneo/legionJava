@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.generation.italy.legion.model.data.HibernateConstants.*;
 
@@ -76,6 +77,11 @@ public class HibernateCourseRepository extends GenericCrudRepository<Course> imp
        lc.forEach(Course::deactivate);
 
     }
+    @Override
+    public List<Course> findAll(){
+
+        return null;
+    }
 
     @Override
     public boolean adjustActiveCourses(int NumActive) throws DataException {
@@ -105,6 +111,7 @@ public class HibernateCourseRepository extends GenericCrudRepository<Course> imp
         q.setParameter("p", "%" + part + "%");
         return q.list();
     }
+
 
 
 }
