@@ -5,31 +5,31 @@ import org.generation.italy.legion.dtos.TeacherDto;
 import org.generation.italy.legion.model.data.exceptions.DataException;
 import org.generation.italy.legion.model.entities.Level;
 import org.generation.italy.legion.model.entities.Teacher;
-import org.generation.italy.legion.model.services.abstractions.AbstractTeacherDidacticService;
+import org.generation.italy.legion.model.services.abstractions.AbstractCrudService;
+import org.generation.italy.legion.model.services.abstractions.AbstractDidacticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping(value = "api/teachers") //davanti al prefisso dei metodi avremo "api"
 public class ApiTeacherController {
-    private AbstractTeacherDidacticService service;
+    private AbstractDidacticService didacticService;
+    private AbstractCrudService<Teacher> teacherService;
 
     @Autowired
-    public ApiTeacherController(AbstractTeacherDidacticService service){
-        this.service = service;
+    public ApiTeacherController(AbstractDidacticService didacticService, AbstractCrudService<Teacher> teacherService){
+
+        this.didacticService = didacticService;
+        this.teacherService = teacherService;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TeacherDto> findById(@PathVariable long id){
         try {
-            Optional<Teacher> teacherOp = service.findById(id);
+            Optional<Teacher> teacherOp = teacherService.findById(id);
             if(teacherOp.isPresent()){
                 return ResponseEntity.ok().body(TeacherDto.fromEntity(teacherOp.get()));
             }
@@ -44,7 +44,7 @@ public class ApiTeacherController {
     public ResponseEntity<Iterable<SimpleTeacherDto>> findWithSkillAndLevel(@RequestParam(required = false) Long skillId,
                                                                   @RequestParam(required = false) Level level){
         try {
-            Iterable<Teacher> teacherIt = service.findWithSkillAndLevel(skillId, level);
+            Iterable<Teacher> teacherIt = didacticService.findWithSkillAndLevel(skillId, level);
             return ResponseEntity.ok().body(SimpleTeacherDto.fromEntityIterable(teacherIt, skillId));
 
         } catch (DataException e){

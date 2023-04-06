@@ -12,8 +12,8 @@ import java.util.*;
 
 import static org.generation.italy.legion.model.data.Constants.ENTITY_NOT_FOUND;
 
-@Repository
-@Profile("ser")
+/*@Repository
+@Profile("ser")*/
 public class SerializedCourseRepository implements CourseRepository {
     private static final String SERIALIZED_FILE_NAME = "courses.ser";
     public static long nextID;
@@ -27,31 +27,40 @@ public class SerializedCourseRepository implements CourseRepository {
         this.filename = SERIALIZED_FILE_NAME;
     }
 
+
     @Override
-    public List<Course> findAll() throws DataException {
+    public List<Course> findAll() {
         try {
             return load();
         } catch (IOException | ClassNotFoundException e) {
-            throw new DataException("Errore nel findByTitleContains", e);
+            try {
+                throw new DataException("Errore nel findByTitleContains", e);
+            } catch (DataException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
     @Override
     public Optional<Course> findById(long id) throws DataException {
-        try {
-            var courses = load();
-            for(var c : courses) {
-                if(c.getId() == id) {
-                    return Optional.of(c);
-                }
-            }
-            return Optional.empty();
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new DataException("Errore nel create course", e);
-        }
+        return Optional.empty();
     }
+
+    @Override
+    public Course create(Course entity) throws DataException {
+        return null;
+    }
+
+    @Override
+    public void update(Course entity) throws EntityNotFoundException, DataException {
+
+    }
+
+    @Override
+    public void deleteById(long id) throws EntityNotFoundException, DataException {
+
+    }
+
 
     @Override
     public List<Course> findByTitleContains(String part) throws DataException {
@@ -68,61 +77,6 @@ public class SerializedCourseRepository implements CourseRepository {
             throw new DataException("Errore nel findByTitleContains", e);
         }
     }
-
-    @Override
-    public Course create(Course course) throws DataException {
-        try {
-            var courses = load();
-            course.setId(++nextID);
-            courses.add(course);
-            store(courses);
-            return course;
-        } catch (IOException | ClassNotFoundException e) {
-            throw new DataException("Errore nel create course", e);
-        }
-    }
-
-    @Override
-    public void update(Course course) throws EntityNotFoundException, DataException {
-        try {
-            var courses = load();
-            int pos = -1;
-            for(int i=0; i < courses.size(); i++) {
-                if(courses.get(i).getId() == course.getId()) {
-                    pos = i;
-                }
-            }
-            if(pos == -1) {
-                throw new EntityNotFoundException(ENTITY_NOT_FOUND + course.getId());
-            }
-            courses.set(pos, course);
-            store(courses);
-
-        } catch (IOException | ClassNotFoundException e) {
-            throw new DataException("Errore nel create course", e);
-        }
-    }
-
-    @Override
-    public void deleteById(long id) throws EntityNotFoundException, DataException {
-        try {
-            var courses = load();
-            for(Iterator<Course> it = courses.iterator(); it.hasNext();) {
-                Course c = it.next();
-                if(c.getId() == id) {
-                    it.remove();
-                    //courses.remove(c);
-                    store(courses);
-                    return;
-                }
-            }
-            throw new EntityNotFoundException(ENTITY_NOT_FOUND + id);
-
-        } catch (IOException | ClassNotFoundException e) {
-            throw new DataException("Errore nel create course", e);
-        }
-    }
-
     @Override
     public int countActiveCourses() throws DataException {
         try {

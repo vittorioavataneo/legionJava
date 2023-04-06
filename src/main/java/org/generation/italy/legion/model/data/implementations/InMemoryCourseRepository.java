@@ -11,8 +11,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 
-@Repository
-@Profile("memo")
+/*@Repository
+@Profile("memo")*/
 public class InMemoryCourseRepository implements CourseRepository {
     /*
         pensalo come una arrayList(NON fanno parte della stassa famiglia) ma le posizioni vengono definite con degli id UNIVOCI
@@ -32,19 +32,33 @@ public class InMemoryCourseRepository implements CourseRepository {
         si! hai capito!! serve "solo" per ricordarci/ o a dire di controllare se un dato è vuoto(null) o meno, così da evitare cappellate logiche durante la scrittura dei codici
      */
 
+
+
     @Override
-    public List<Course> findAll() throws DataException {
+    public List<Course> findAll() {
         return new ArrayList<>(dataSource.values());
     }
 
     @Override
-    public Optional<Course> findById(long id) {
-        Course x = dataSource.get(id);
-        if (x != null) {
-            return Optional.of(x);
-        }
+    public Optional<Course> findById(long id) throws DataException {
         return Optional.empty();
     }
+
+    @Override
+    public Course create(Course entity) throws DataException {
+        return null;
+    }
+
+    @Override
+    public void update(Course entity) throws EntityNotFoundException, DataException {
+
+    }
+
+    @Override
+    public void deleteById(long id) throws EntityNotFoundException, DataException {
+
+    }
+
 
     @Override
     public List<Course> findByTitleContains(String part) {
@@ -58,35 +72,7 @@ public class InMemoryCourseRepository implements CourseRepository {
         return result;
     }
 
-    @Override
-    public Course create(Course course) {
-        nextId++;
-        dataSource.put(nextId, course);
-        course.setId(nextId);
-        return course;
-    }
 
-    @Override
-    public void update(Course course) throws EntityNotFoundException {
-        if (dataSource.containsKey(course.getId())) {
-            dataSource.put(course.getId(), course);                   //inseriamo l'oggeto nel hashMap
-        } else {
-//            EntityNotFoundException e = new EntityNotFoundException("Non esiste un corso con id: " + course.getId());
-//            throw e;
-            throw new EntityNotFoundException("Non esiste un corso con id: " + course.getId());
-        }
-    }
-
-    @Override
-    public void deleteById(long id) throws EntityNotFoundException {
-//        Course old = dataSource.remove(id);
-//        if (old == null){
-//            throw new EntityNotFoundException("Non esiste un corso con id: " + id);
-//        }
-        if (dataSource.remove(id) == null) {           //possiamo farlo perche .remove() ritornerà null se non trova l' id
-            throw new EntityNotFoundException("Non esiste un corso con id: " + id);
-        }
-    }
 
     @Override
     public int countActiveCourses() {

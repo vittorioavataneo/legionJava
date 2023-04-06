@@ -2,15 +2,23 @@ package org.generation.italy.legion.model.data.abstractions;
 
 import org.generation.italy.legion.model.data.exceptions.DataException;
 import org.generation.italy.legion.model.entities.Course;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface CourseRepository extends AbstractCrudRepository<Course>{
+public interface CourseRepository extends AbstractCrudRepository<Course> {
     List<Course> findByTitleContains(String part) throws DataException;
+    /*@Query("""
+            select count(c)
+            from Course c
+            where c.active = true
+            """)*/
     int countActiveCourses() throws DataException;
+
     void deactivateOldest(int n) throws DataException;
     boolean adjustActiveCourses(int NumActive) throws DataException;
-
     Iterable<Course> findByTitleActiveAndMinEditions(String part, boolean active, int minEditions);
     Iterable<Course> findByTitleAndActive(String part, boolean active);
 
