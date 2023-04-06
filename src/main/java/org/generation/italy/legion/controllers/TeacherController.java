@@ -1,10 +1,11 @@
 package org.generation.italy.legion.controllers;
 
+import org.generation.italy.legion.model.data.abstractions.GenericRepository;
 import org.generation.italy.legion.model.data.exceptions.DataException;
 import org.generation.italy.legion.model.entities.Level;
 import org.generation.italy.legion.model.entities.Teacher;
-import org.generation.italy.legion.model.services.abstractions.AbstractCrudService;
 import org.generation.italy.legion.model.services.abstractions.AbstractDidacticService;
+import org.generation.italy.legion.model.services.implementations.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,16 +13,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Optional;
 
-@Controller
+
 public class TeacherController {
     private AbstractDidacticService didacticService;
-    private AbstractCrudService<Teacher> teacherService;
+    private GenericService<Teacher> crudService;
 
     @Autowired
-    public TeacherController(AbstractDidacticService didacticService, AbstractCrudService<Teacher> teacherService){
-
+    public TeacherController(AbstractDidacticService didacticService,
+                                GenericRepository<Teacher> teacherRepo){
         this.didacticService = didacticService;
-        this.teacherService = teacherService;
+        this.crudService = new GenericService<>(teacherRepo);
     }
     @GetMapping("/showTeacherInsertForm")
     public String showForm(Teacher t){
@@ -43,15 +44,10 @@ public class TeacherController {
 
     @GetMapping("/findById")
     public String findById(Model m, long id){
-        try {
-            Optional<Teacher> teacherOp = teacherService.findById(id);
-            teacherOp.orElse(new Teacher());
-            m.addAttribute("teacher", teacherOp);
-            return "result_find_by_id";
-        } catch (DataException e){
-            e.printStackTrace();
-            m.addAttribute("error", e.getCause().getMessage());
-            return "error";
-        }
+        Optional<Teacher> teacherOp = crudService.findById(id);
+        teacherOp.orElse(new Teacher());
+        m.addAttribute("teacher", teacherOp);
+        return "result_find_by_id";
+
     }
 }

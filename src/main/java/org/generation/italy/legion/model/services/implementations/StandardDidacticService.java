@@ -32,9 +32,7 @@ public class StandardDidacticService implements AbstractDidacticService {
 
 //COURSE
     @Override
-    public List<Course> findCoursesByTitleContains(String part) throws DataException {
-        return courseRepo.findByTitleContains(part);
-    }
+    public List<Course> findCoursesByTitleContains(String part) throws DataException {return courseRepo.findByTitleContains(part);}
 
     @Override
     public boolean adjustActiveCourses(int numActive) throws DataException {
@@ -52,46 +50,29 @@ public class StandardDidacticService implements AbstractDidacticService {
     }
 
     @Override
-    public Iterable<Course> findCoursesByTitleActiveAndMinEditions(String part, boolean active, int minEditions) {
-        return courseRepo.findByTitleActiveAndMinEditions(part, active, minEditions);
-    }
+    public Iterable<Course> findByTitleAndIsActiveAndMinEdition(String part, boolean active, int minEditions) {return courseRepo.findByTitleAndIsActiveAndMinEdition(part, active, minEditions);}
 
     @Override
-    public Iterable<Course> findCoursesByTitleAndActive(String part, boolean active) {
-        return courseRepo.findByTitleAndActive(part, active);
-    }
+    public Iterable<Course> findByTitleAndIsActive(String part, boolean active) {return courseRepo.findByTitleContainingAndActiveTrue(part);}
 
 
 //TEACHER
     @Override
-    public Iterable<Teacher> findWithCompetenceByLevel(Level teacherLevel) throws DataException {
-        return teacherRepo.findByLevel(teacherLevel);
-    }
+    public Iterable<Teacher> findWithCompetenceByLevel(Level teacherLevel) throws DataException {return teacherRepo.findByLevel(teacherLevel);}
 
     @Override
-    public Iterable<Teacher> findWithSkillAndLevel(long idSkill, Level competenceLevel) {
-        return teacherRepo.findWithSkillAndLevel(idSkill, competenceLevel);
-    }
+    public Iterable<Teacher> findWithSkillAndLevel(long idSkill, Level competenceLevel) {return teacherRepo.findWithSkillAndLevel(idSkill, competenceLevel);}
 
 
 //COURSE EDITION
     @Override
-    public double findCourseEditionTotalCost() {
-
-        return editionRepo.findTotalCost();
-    }
+    public double findCourseEditionTotalCost() {return editionRepo.findTotalCost();}
 
     @Override
-    public Optional<CourseEdition> findMostExpensiveCourseEdition() {
-
-        return editionRepo.findFirstByOrderByCostDesc();
-    }
+    public Optional<CourseEdition> findMostExpensiveCourseEdition() {return editionRepo.findFirstByOrderByCostDesc();}
 
     @Override
-    public double findCourseEditionAverageCost() {
-
-        return editionRepo.findAverageCost();
-    }
+    public double findCourseEditionAverageCost() {return editionRepo.findAverageCost();}
 
     @Override
     public double findCourseEditionAllDurations() {
@@ -99,14 +80,10 @@ public class StandardDidacticService implements AbstractDidacticService {
     }
 
     @Override
-    public Iterable<CourseEdition> findCourseEditionsByCourse(long courseId) {
-        return editionRepo.findByCourseId(courseId);
-    }
+    public Iterable<CourseEdition> findCourseEditionsByCourse(long courseId) {return editionRepo.findByCourseId(courseId);}
 
     @Override
-    public Iterable<CourseEdition> findCourseEditionsByCourseTitleAndPeriod(String titlePart, LocalDate startAt, LocalDate endAt) {
-        return editionRepo.findByCourseTitleContainingAndStartedAtBetween(titlePart, startAt, endAt);
-    }
+    public Iterable<CourseEdition> findCourseEditionsByCourseTitleAndPeriod(String titlePart, LocalDate startAt, LocalDate endAt) {return editionRepo.findByCourseTitleContainingAndStartedAtBetween(titlePart, startAt, endAt);}
 
     @Override
     public Iterable<CourseEdition> findAllCourseEdition() {

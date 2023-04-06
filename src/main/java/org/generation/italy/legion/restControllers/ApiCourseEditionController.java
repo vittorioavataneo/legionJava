@@ -1,9 +1,10 @@
 package org.generation.italy.legion.restControllers;
 
 import org.generation.italy.legion.dtos.SimpleCourseEditionDto;
+import org.generation.italy.legion.model.data.abstractions.GenericRepository;
 import org.generation.italy.legion.model.entities.CourseEdition;
-import org.generation.italy.legion.model.services.abstractions.AbstractCrudService;
 import org.generation.italy.legion.model.services.abstractions.AbstractDidacticService;
+import org.generation.italy.legion.model.services.implementations.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +16,13 @@ import java.util.Optional;
 public class ApiCourseEditionController {
 
     private AbstractDidacticService didacticService;
-    private AbstractCrudService<CourseEdition> editionService;
+    private GenericService<CourseEdition> crudService;
+
     @Autowired
-    public ApiCourseEditionController(AbstractDidacticService didacticService, AbstractCrudService<CourseEdition> editionService){
+    public ApiCourseEditionController(AbstractDidacticService didacticService,
+                               GenericRepository<CourseEdition> editionRepo){
         this.didacticService = didacticService;
-        this.editionService = editionService;
+        this.crudService = new GenericService<>(editionRepo);
     }
     @GetMapping("/{courseId}")
     public ResponseEntity<Iterable<SimpleCourseEditionDto>>findByCourseId(@PathVariable long courseId){

@@ -2,7 +2,6 @@ package org.generation.italy.legion.model.services.implementations;
 
 import org.generation.italy.legion.model.data.abstractions.CourseRepository;
 import org.generation.italy.legion.model.data.exceptions.DataException;
-import org.generation.italy.legion.model.data.implementations.InMemoryCourseRepository;
 import org.generation.italy.legion.model.entities.Course;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,19 +20,7 @@ public class StandardDidacticServiceTest {
     private Course c4;
     @BeforeEach
     void setUp() {
-        repo = new InMemoryCourseRepository();
-        c1 = new Course(1, "Title1", "Description1", "Program1", 200,true, LocalDate.of(2023,02,17));
-        c2 = new Course(2, "Title2", "Description2", "Program2", 201,true, LocalDate.of(2023,02,18));
-        c3 = new Course(3, "Title3", "Description3", "Program3", 202,true, LocalDate.of(2023,02,16));
-        c4 = new Course(4, "Title4", "Description4", "Program4", 203,true, LocalDate.of(2023,02,19));
-        try {
-            repo.create(c1);
-            repo.create(c2);
-            repo.create(c3);
-            repo.create(c4);
-        } catch (DataException e) {
-            fail("Errore nell'inserimento corsi del setup: " + e.getMessage());
-        }
+
     }
 
     @AfterEach

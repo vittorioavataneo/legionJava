@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public interface CourseEditionRepository extends JpaRepository<CourseEdition, Long>, CourseEditionCustomRepository {
+public interface CourseEditionRepository extends GenericRepository<CourseEdition>, CourseEditionCustomRepository {
 
     @Query("""
             select sum(ce.cost)

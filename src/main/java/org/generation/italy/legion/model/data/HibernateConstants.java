@@ -78,7 +78,7 @@ public static final String HQL_FIND_TEACHERS_BY_COURSE_EDITION = """
 
     public static final String HQL_FIND_COURSE_BY_TITLE_ACTIVE = """
         from Course
-        where (title like :p) and (active = :a)
+        where (title like :p) and (active = true)
         """;
 
     public static final String HQL_FIND_MODE_COURSE_EDITION_COST = """
@@ -96,7 +96,22 @@ public static final String HQL_FIND_TEACHERS_BY_COURSE_EDITION = """
             from CourseEdition ce
             order by (ce.cost)
             """;
+
+    public static final String HQL_COURSE_ORDER_BY_DATE = """
+            select c
+            from Course c
+            order by (c.startedAt)
+            """;
+    public static final String HQL_FIND_COURSE_ACTIVE_BY_TITLE_LIKE_AND_MIN_EDITION = """
+            SELECT c
+            FROM Course c
+            JOIN c.editions ce
+            WHERE c.title LIKE :part AND c.active = :active
+            GROUP BY(c.id)
+            HAVING COUNT(ce.id) >= :minEditions
+            """;
 }
+
 
 
 

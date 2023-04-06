@@ -1,10 +1,11 @@
 package org.generation.italy.legion.restControllers;
 
 import org.generation.italy.legion.dtos.CourseDto;
+import org.generation.italy.legion.model.data.abstractions.GenericRepository;
 import org.generation.italy.legion.model.data.exceptions.DataException;
 import org.generation.italy.legion.model.entities.Course;
-import org.generation.italy.legion.model.services.abstractions.AbstractCrudService;
 import org.generation.italy.legion.model.services.abstractions.AbstractDidacticService;
+import org.generation.italy.legion.model.services.implementations.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,27 +16,33 @@ import java.util.Optional;
 @RequestMapping(value = "api/courses")
 public class ApiCourseController {
     private AbstractDidacticService didacticService;
-    private AbstractCrudService<Course> courseService;
+    private GenericService<Course> crudService;
 
     @Autowired
-    public ApiCourseController(AbstractDidacticService didacticService, AbstractCrudService<Course> courseService){
-
+    public ApiCourseController(AbstractDidacticService didacticService,
+                                GenericRepository<Course> courseRepo){
         this.didacticService = didacticService;
-        this.courseService = courseService;
+        this.crudService = new GenericService<>(courseRepo);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseDto> findById(@PathVariable long id){
-        try {
-            Optional<Course> c = courseService.findById(id);
-            if(c.isPresent()){
-                return ResponseEntity.ok().body(CourseDto.fromEntity(c.get()));
-            }
-            return ResponseEntity.notFound().build();
-        } catch (DataException e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+        Optional<Course> c = crudService.findById(id);
+        if(c.isPresent()){
+            return ResponseEntity.ok().body(CourseDto.fromEntity(c.get()));
         }
+        return ResponseEntity.notFound().build();
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable long id){
+        Optional<Course> oCourse = crudService.findById(id);
+        if(oCourse.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        crudService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping()
@@ -47,10 +54,10 @@ public class ApiCourseController {
                 Iterable<Course> courseIterable = didacticService.findCoursesByTitleContains(part);
                 return ResponseEntity.ok().body(CourseDto.fromEntityIterable(courseIterable));
             }else if(minEdition == null){
-                Iterable<Course> courseIterable = didacticService.findCoursesByTitleAndActive(part, active);
+                Iterable<Course> courseIterable = didacticService.findByTitleAndIsActive(part, active);
                 return ResponseEntity.ok().body(CourseDto.fromEntityIterable(courseIterable));
             }else if(part!=null){
-                Iterable<Course> courseIterable = didacticService.findCoursesByTitleActiveAndMinEditions(part, active, minEdition);
+                Iterable<Course> courseIterable = didacticService.findByTitleAndIsActiveAndMinEdition(part, active, minEdition);
                 return ResponseEntity.ok().body(CourseDto.fromEntityIterable(courseIterable));
             }else {
                 return ResponseEntity.badRequest().build();
