@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StandardDidacticService implements AbstractDidacticService{
+public class StandardDidacticService implements AbstractDidacticService {
     //@Autowired
     private CourseRepository courseRepo; // field injection = inietta sul campo
     private TeacherRepository teacherRepo;
@@ -29,17 +29,8 @@ public class StandardDidacticService implements AbstractDidacticService{
         this.editionRepo = editionRepo;
     }
 
-    //    @Autowired
-    public void setCourseRepo(CourseRepository courseRepo) { // setter injection
-        this.courseRepo = courseRepo;
-    }
-    public void setCourseEditionRepo(CourseEditionRepository editionRepo) { // setter injection
-        this.editionRepo = editionRepo;
-    }
-    public void setTeacherRepo(TeacherRepository teacherRepo) { // setter injection
-        this.teacherRepo = teacherRepo;
-    }
 
+//COURSE
     @Override
     public List<Course> findCoursesByTitleContains(String part) throws DataException {
         return courseRepo.findByTitleContains(part);
@@ -70,6 +61,8 @@ public class StandardDidacticService implements AbstractDidacticService{
         return courseRepo.findByTitleAndActive(part, active);
     }
 
+
+//TEACHER
     @Override
     public Iterable<Teacher> findWithCompetenceByLevel(Level teacherLevel) throws DataException {
         return teacherRepo.findByLevel(teacherLevel);
@@ -81,7 +74,7 @@ public class StandardDidacticService implements AbstractDidacticService{
     }
 
 
-
+//COURSE EDITION
     @Override
     public double findCourseEditionTotalCost() {
 

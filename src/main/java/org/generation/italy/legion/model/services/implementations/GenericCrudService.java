@@ -25,7 +25,7 @@ public class GenericCrudService<T> implements AbstractCrudService<T> {
     }
 
     @Override
-    public List<T> findAll()  {
+    public List<T> findAll() throws DataException  {
         return repo.findAll();
     }
 

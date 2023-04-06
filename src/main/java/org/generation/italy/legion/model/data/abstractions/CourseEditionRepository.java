@@ -32,29 +32,8 @@ public interface CourseEditionRepository extends JpaRepository<CourseEdition, Lo
 
     Iterable<CourseEdition> findByCourseTitleContainingAndStartedAtBetween(String titlePart,
                                                                     LocalDate startAt, LocalDate endAt);
-    /*       @Query("""
-            select ce
-            from CourseEdition ce
-            order by ce.cost
-            skip
-               case
-                 when (SELECT COUNT(ce) FROM CourseEdition) % 2 = 0 THEN (COUNT(ce)/2)-1
-                 else FLOOR(COUNT(ce)/2)
-               end;
-            LIMIT
-               CASE
-                 WHEN (SELECT COUNT(ce) FROM CourseEdition) % 2 = 0 THEN 2
-                 ELSE 1
-               END;
-            """)
-    Iterable<CourseEdition> findCourseEditionsMedian();
 
-    @Query("""
-            SELECT ce.cost FROM CourseEdition ce
-            GROUP BY ce.cost
-            ORDER BY ce.cost DESC
-            LIMIT 1
-            """)
+    Iterable<CourseEdition> findMedian();
     Optional<Double> findCourseEditionCostMode();
-    */
+
 }

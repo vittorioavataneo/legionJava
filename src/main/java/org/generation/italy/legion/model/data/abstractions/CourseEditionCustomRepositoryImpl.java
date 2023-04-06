@@ -19,7 +19,6 @@ public class CourseEditionCustomRepositoryImpl implements CourseEditionCustomRep
     public Iterable<CourseEdition> findMedian() {
         TypedQuery<Long> qCountCE = em.createQuery(HQL_COUNT_COURSE_EDITION, Long.class);
         int countCe= (int) qCountCE.getSingleResult().longValue();
-//         int countCe = 0;
         if(countCe == 0){
             return new ArrayList<CourseEdition>();
         }
